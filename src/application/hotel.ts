@@ -167,13 +167,13 @@ export const createHotel = async (
     }
 
     // Add the hotel
-    await Hotel.create({
-      name: hotel.name,
-      location: hotel.location,
-      image: hotel.image,
-      price: parseInt(hotel.price),
-      description: hotel.description,
-    });
+    // await Hotel.create({
+    //   name: hotel.name,
+    //   location: hotel.location,
+    //   image: hotel.image,
+    //   price: parseInt(hotel.price),
+    //   description: hotel.description,
+    // });
 
     // Return the response
     res.status(201).send();

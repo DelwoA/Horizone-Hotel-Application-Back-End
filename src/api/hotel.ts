@@ -7,6 +7,7 @@ import {
   updateHotel,
 } from "../application/hotel";
 import { isAuthenticated } from "./middlewares/authentication-middleware";
+import { isAdmin } from "./middlewares/authorization-middleware";
 
 const hotelsRouter = express.Router();
 
@@ -16,7 +17,10 @@ const hotelsRouter = express.Router();
 // hotelsRouter.delete("/:id", deleteHotel);
 // hotelsRouter.put("/:id", updateHotel);
 
-hotelsRouter.route("/").get(getAllHotels).post(isAuthenticated, createHotel);
+hotelsRouter
+  .route("/")
+  .get(getAllHotels)
+  .post(isAuthenticated, isAdmin, createHotel);
 hotelsRouter
   .route("/:id")
   .get(getHotelById)
