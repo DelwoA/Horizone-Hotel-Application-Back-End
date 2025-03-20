@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import Hotel from "../infrastructure/schemas/Hotel";
 import NotFoundError from "../domain/errors/not-found-error";
 import ValidationError from "../domain/errors/validation-error";
+import { createHotelDTO, updateHotelDTO } from "../domain/dtos/hotel";
 
 // const hotels = [
 //   {
@@ -153,27 +154,27 @@ export const createHotel = async (
   next: NextFunction
 ) => {
   try {
-    const hotel = req.body;
+    /*
+     * When createHotel function is getting executed, the 'safeParse' will check if the req.body is in the shape of 'createHotelDTO'.
+     * In a nutshell, our zod validator which is 'createHotelDTO', is safeParsing the req.body.
+     *
+     * If the data is in the shape of the validator, it will return a object with the data and a success property.
+     */
+    const hotel = createHotelDTO.safeParse(req.body);
 
-    // Validate the request data
-    if (
-      !hotel.name ||
-      !hotel.location ||
-      !hotel.image ||
-      !hotel.price ||
-      !hotel.description
-    ) {
-      throw new ValidationError("Invalid hotel data");
+    // Validate the request data, by checking if the hotel is in the shape of 'createHotelDTO'
+    if (!hotel.success) {
+      throw new ValidationError(hotel.error.message);
     }
 
     // Add the hotel
-    // await Hotel.create({
-    //   name: hotel.name,
-    //   location: hotel.location,
-    //   image: hotel.image,
-    //   price: parseInt(hotel.price),
-    //   description: hotel.description,
-    // });
+    await Hotel.create({
+      name: hotel.data.name,
+      location: hotel.data.location,
+      image: hotel.data.image,
+      price: parseInt(hotel.data.price),
+      description: hotel.data.description,
+    });
 
     // Return the response
     res.status(201).send();
@@ -207,23 +208,15 @@ export const updateHotel = async (
 ) => {
   try {
     const hotelId = req.params.hotelId;
-    const updatedHotel = req.body;
+    const updatedHotel = updateHotelDTO.safeParse(req.body);
 
     // Validate the request data
-    if (
-      !updatedHotel.name ||
-      !updatedHotel.location ||
-      !updatedHotel.rating ||
-      !updatedHotel.reviews ||
-      !updatedHotel.image ||
-      !updatedHotel.price ||
-      !updatedHotel.description
-    ) {
+    if (!updatedHotel.success) {
       throw new ValidationError("Invalid hotel data");
     }
 
     // Update the hotel
-    await Hotel.findByIdAndUpdate(hotelId, updatedHotel);
+    await Hotel.findByIdAndUpdate(hotelId, updatedHotel.data);
 
     // Return the response
     res.status(200).send();
