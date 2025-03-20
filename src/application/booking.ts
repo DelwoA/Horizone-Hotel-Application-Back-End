@@ -9,11 +9,13 @@ export const createBooking = async (
 ) => {
   try {
     const booking = req.body;
+    console.log(booking);
 
     // Validate the request data
+    const user = req.auth;
+
     if (
       !booking.hotelId ||
-      !booking.userId ||
       !booking.checkIn ||
       !booking.checkOut ||
       !booking.roomNumber
@@ -21,10 +23,12 @@ export const createBooking = async (
       throw new Error("Invalid booking data");
     }
 
+    console.log(req.auth);
+
     // Add the booking
     await Booking.create({
       hotelId: booking.hotelId,
-      userId: booking.userId,
+      userId: user.userId,
       checkIn: booking.checkIn,
       checkOut: booking.checkOut,
       roomNumber: booking.roomNumber,

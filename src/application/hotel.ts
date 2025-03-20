@@ -208,9 +208,11 @@ export const updateHotel = async (
 ) => {
   try {
     const hotelId = req.params.hotelId;
+
+    // Zod validator 'updateHotelDTO' used.
     const updatedHotel = updateHotelDTO.safeParse(req.body);
 
-    // Validate the request data
+    // Checking if the updated hotel is in the shape of 'updateHotelDTO'
     if (!updatedHotel.success) {
       throw new ValidationError("Invalid hotel data");
     }
