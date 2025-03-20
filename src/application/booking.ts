@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-
 import Booking from "../infrastructure/schemas/Booking";
+import { createBookingDTO } from "../domain/dtos/booking";
 
 export const createBooking = async (
   req: Request,
@@ -8,30 +8,24 @@ export const createBooking = async (
   next: NextFunction
 ) => {
   try {
-    const booking = req.body;
-    console.log(booking);
+    // Zod validator 'createBookingDTO' used.
+    const booking = createBookingDTO.safeParse(req.body);
 
-    // Validate the request data
-    const user = req.auth;
-
-    if (
-      !booking.hotelId ||
-      !booking.checkIn ||
-      !booking.checkOut ||
-      !booking.roomNumber
-    ) {
-      throw new Error("Invalid booking data");
+    // Checking if the updated hotel is in the shape of 'updateHotelDTO'
+    if (!booking.success) {
+      throw new Error(booking.error.message);
     }
 
-    console.log(req.auth);
+    // Get the user
+    const user = req.auth;
 
     // Add the booking
     await Booking.create({
-      hotelId: booking.hotelId,
+      hotelId: booking.data.hotelId,
       userId: user.userId,
-      checkIn: booking.checkIn,
-      checkOut: booking.checkOut,
-      roomNumber: booking.roomNumber,
+      checkIn: booking.data.checkIn,
+      checkOut: booking.data.checkOut,
+      roomNumber: booking.data.roomNumber,
     });
 
     // Return the response

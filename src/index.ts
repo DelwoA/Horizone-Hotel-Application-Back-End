@@ -25,7 +25,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/hotels", hotelsRouter);
-app.use("/api/users", usersRouter);
 app.use("/api/bookings", bookingsRouter);
 
 app.use(globalErrorHandlingMiddleware);
