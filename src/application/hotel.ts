@@ -48,7 +48,7 @@ export const generateResponse = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { messages } = req.body;
+  const { prompt } = req.body;
 
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -56,25 +56,22 @@ export const generateResponse = async (
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages:
-      messages.length === 1
-        ? [
-            {
-              role: "system",
-              content:
-                "You are an assistant who is working as a receptionist in a hotel and you are going to talk to users and help them find the right entertainment options.",
-            },
-            ...messages,
-          ]
-        : messages,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a assistant that will categorize the words that a user gives and give them labels and show an output.",
+      },
+      { role: "user", content: prompt },
+    ],
     store: true,
   });
 
   res.status(200).json({
-    messages: [
-      ...messages,
-      { role: "assistant", content: completion.choices[0].message.content },
-    ],
+    message: {
+      role: "assistant",
+      content: completion.choices[0].message.content,
+    },
   });
   return;
 };
