@@ -5,6 +5,8 @@ import NotFoundError from "../domain/errors/not-found-error";
 import ValidationError from "../domain/errors/validation-error";
 import { createHotelDTO, updateHotelDTO } from "../domain/dtos/hotel";
 
+import OpenAI from "openai";
+
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const getAllHotels = async (
@@ -37,6 +39,34 @@ export const getHotelById = async (
   } catch (error) {
     next(error);
   }
+};
+
+// TODO: Implement the LLM here
+// OpenAI API call
+export const generateResponse = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { messages } = req.body;
+
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages,
+    store: true,
+  });
+
+  res.status(200).json({
+    messages: [
+      ...messages,
+      { role: "assistant", content: completion.choices[0].message.content },
+    ],
+  });
+  return;
 };
 
 export const createHotel = async (
