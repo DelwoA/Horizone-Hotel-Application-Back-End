@@ -37,6 +37,7 @@ export const createBooking = async (
   }
 };
 
+// Get all bookings
 export const getAllBookings = async (
   req: Request,
   res: Response,
@@ -51,6 +52,7 @@ export const getAllBookings = async (
   }
 };
 
+// Get all bookings for a specific hotel
 export const getAllBookingsForHotel = async (
   req: Request,
   res: Response,

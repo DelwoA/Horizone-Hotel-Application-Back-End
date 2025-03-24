@@ -10,8 +10,10 @@ const bookingsRouter = express.Router();
 
 bookingsRouter
   .route("/")
-  .get(getAllBookings)
+  .get(isAuthenticated, getAllBookings)
   .post(isAuthenticated, createBooking);
-bookingsRouter.route("/hotels/:hotelId").get(getAllBookingsForHotel);
+bookingsRouter
+  .route("/hotels/:hotelId")
+  .get(isAuthenticated, getAllBookingsForHotel);
 
 export default bookingsRouter;
