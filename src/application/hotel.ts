@@ -56,7 +56,17 @@ export const generateResponse = async (
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages,
+    messages:
+      messages.length === 1
+        ? [
+            {
+              role: "system",
+              content:
+                "You are an assistant who is working as a receptionist in a hotel and you are going to talk to users and help them find the right entertainment options.",
+            },
+            ...messages,
+          ]
+        : messages,
     store: true,
   });
 
