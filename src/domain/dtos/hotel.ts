@@ -6,7 +6,7 @@ export const createHotelDTO = z.object({
   name: z.string(),
   location: z.string(),
   image: z.string(),
-  price: z.string(),
+  price: z.number(),
   description: z.string(),
 });
 
@@ -16,6 +16,6 @@ export const updateHotelDTO = z.object({
   rating: z.number().optional(),
   reviews: z.number().optional(),
   image: z.string(),
-  price: z.string(),
+  price: z.number(),
   description: z.string(),
 });

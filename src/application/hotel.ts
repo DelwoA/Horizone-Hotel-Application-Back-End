@@ -57,12 +57,12 @@ export const generateResponse = async (
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
-      {
-        role: "system",
-        content: `You are a assistant that will categorize the words that a user gives and give them labels and show an output. 
-                  Return this response as the following example: 
-                  user: Lake, Cat, Dog, BMW, Benz, Tree; response: [{Label: Nature, words:['Lake', 'Tree']}, {Label: Animals, words:['Cat', 'Dog']}]`,
-      },
+      // {
+      //   role: "system",
+      //   content: `You are a assistant that will categorize the words that a user gives and give them labels and show an output.
+      //             Return this response as the following examples:
+      //             user: Lake, Cat, Dog, BMW, Benz, Tree; response: [{Label: Nature, words:['Lake', 'Tree']}, {Label: Animals, words:['Cat', 'Dog']}]`,
+      // },
       { role: "user", content: prompt },
     ],
     store: true,
@@ -101,7 +101,7 @@ export const createHotel = async (
       name: hotel.data.name,
       location: hotel.data.location,
       image: hotel.data.image,
-      price: parseInt(hotel.data.price),
+      price: hotel.data.price,
       description: hotel.data.description,
     });
 
