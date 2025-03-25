@@ -59,8 +59,9 @@ export const generateResponse = async (
     messages: [
       {
         role: "system",
-        content:
-          "You are a assistant that will categorize the words that a user gives and give them labels and show an output.",
+        content: `You are a assistant that will categorize the words that a user gives and give them labels and show an output. 
+                  Return this response as the following example: 
+                  user: Lake, Cat, Dog, BMW, Benz, Tree; response: [{Label: Nature, words:['Lake', 'Tree']}, {Label: Animals, words:['Cat', 'Dog']}]`,
       },
       { role: "user", content: prompt },
     ],
