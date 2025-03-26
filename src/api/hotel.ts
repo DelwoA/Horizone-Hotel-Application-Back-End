@@ -13,12 +13,6 @@ import { retrieve } from "../application/retrieve";
 
 const hotelsRouter = express.Router();
 
-// hotelsRouter.get("/", getAllHotels);
-// hotelsRouter.get("/:id", getHotelById);
-// hotelsRouter.post("/", createHotel);
-// hotelsRouter.delete("/:id", deleteHotel);
-// hotelsRouter.put("/:id", updateHotel);
-
 hotelsRouter
   .route("/")
   .get(getAllHotels)
