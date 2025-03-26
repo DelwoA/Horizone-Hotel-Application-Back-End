@@ -15,10 +15,10 @@ export const retrieve = async (
 
     // If no query is provided, return all hotels
     if (!query || query === "") {
-      const hotels = (await Hotel.find()).map((hotel) => {
-        hotel: hotel;
-        confidence: 1;
-      });
+      const hotels = (await Hotel.find()).map((hotel) => ({
+        hotel: hotel,
+        confidence: 1,
+      }));
       res.status(200).json(hotels);
     }
 
