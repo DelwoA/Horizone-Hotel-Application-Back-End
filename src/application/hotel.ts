@@ -41,7 +41,6 @@ export const getHotelById = async (
   }
 };
 
-// TODO: Implement the LLM here
 // OpenAI API call
 export const generateResponse = async (
   req: Request,
