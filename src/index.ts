@@ -14,7 +14,7 @@ const app = express();
 app.use(clerkMiddleware());
 // Middleware to parse JSON data in the request body
 app.use(express.json());
-app.use(cors({ origin: "https://horizonehotels-delwoathauda.netlify.app" }));
+app.use(cors());
 
 connectDB();
 
