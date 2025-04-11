@@ -4,6 +4,7 @@ import {
   createBooking,
   getAllBookings,
   getAllBookingsForHotel,
+  getAllBookingsForUser,
 } from "../application/booking";
 
 const bookingsRouter = express.Router();
@@ -15,5 +16,8 @@ bookingsRouter
 bookingsRouter
   .route("/hotels/:hotelId")
   .get(isAuthenticated, getAllBookingsForHotel);
+bookingsRouter
+  .route("/user/:userId?")
+  .get(isAuthenticated, getAllBookingsForUser);
 
 export default bookingsRouter;
