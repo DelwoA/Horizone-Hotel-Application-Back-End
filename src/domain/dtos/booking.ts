@@ -9,4 +9,6 @@ export const createBookingDTO = z.object({
   email: z.string(),
   phoneNumber: z.string(),
   roomNumber: z.number(),
+  paymentStatus: z.enum(["PENDING", "PAID"]).optional().default("PENDING"),
+  paymentMethod: z.enum(["CARD", "BANK_TRANSFER"]).optional().default("CARD"),
 });
