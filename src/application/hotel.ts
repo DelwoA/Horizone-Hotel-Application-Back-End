@@ -23,6 +23,67 @@ export const getAllHotels = async (
   }
 };
 
+export const getFilteredSortedHotels = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log("Filter query params:", req.query);
+
+    // Extract query parameters
+    const { location, sortBy, sortOrder } = req.query;
+
+    // Build query object for filtering
+    let query = {};
+
+    // Add location filter if provided
+    if (location) {
+      // Handle multiple locations (passed as comma-separated string)
+      if (typeof location === "string" && location.includes(",")) {
+        const locations = location.split(",");
+        console.log("Filtering by multiple locations:", locations);
+        query = {
+          location: {
+            $regex: new RegExp(locations.join("|"), "i"), // Regular expression OR operator | to match any of the locations
+          },
+        };
+      }
+      // Handle single location
+      else if (location !== "All") {
+        console.log("Filtering by single location:", location);
+        query = { location: { $regex: new RegExp(location as string, "i") } };
+      }
+    }
+
+    // Build sort options
+    let sortOptions = {};
+
+    // Add sorting by price if provided
+    if (sortBy === "price" && sortOrder) {
+      // Only apply sorting if both sortBy and sortOrder are provided
+      // and sortOrder is not 'none'
+      if (sortOrder === "asc" || sortOrder === "desc") {
+        sortOptions = { price: sortOrder === "asc" ? 1 : -1 };
+      }
+    }
+
+    console.log("MongoDB query:", JSON.stringify(query));
+    console.log("MongoDB sort options:", JSON.stringify(sortOptions));
+
+    // Execute query with filters and sorting
+    const hotels = await Hotel.find(query).sort(sortOptions);
+
+    console.log(`Found ${hotels.length} hotels after filtering and sorting`);
+
+    res.status(200).json(hotels);
+    return;
+  } catch (error) {
+    console.error("Error in getFilteredSortedHotels:", error);
+    next(error);
+  }
+};
+
 export const getHotelById = async (
   req: Request,
   res: Response,

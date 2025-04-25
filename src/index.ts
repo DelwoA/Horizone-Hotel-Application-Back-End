@@ -23,6 +23,7 @@ app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 
 // Configure CORS to allow frontend domain
+// TODO: Double check if dynamic frontend url is working with localhost and production url.
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 app.use(
   cors({

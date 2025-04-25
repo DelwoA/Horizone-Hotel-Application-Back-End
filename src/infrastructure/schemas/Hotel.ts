@@ -31,7 +31,6 @@ const HotelSchema = new mongoose.Schema({
   },
   stripePriceId: {
     type: String,
-    required: true,
     // This field stores the Stripe Price ID associated with this hotel
     // It's used to create checkout sessions with the correct pricing
   },

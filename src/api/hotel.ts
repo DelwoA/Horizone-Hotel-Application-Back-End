@@ -5,6 +5,7 @@ import {
   createHotel,
   deleteHotel,
   updateHotel,
+  getFilteredSortedHotels,
 } from "../application/hotel";
 import { isAuthenticated } from "./middlewares/authentication-middleware";
 import { isAdmin } from "./middlewares/authorization-middleware";
@@ -17,12 +18,17 @@ hotelsRouter
   .route("/")
   .get(getAllHotels)
   .post(isAuthenticated, isAdmin, createHotel);
+
+// Specific routes must come BEFORE parameter routes
+hotelsRouter.route("/filter").get(getFilteredSortedHotels);
+hotelsRouter.route("/embeddings/create").post(createEmbeddings);
+hotelsRouter.route("/search/retrieve").get(retrieve);
+
+// Parameter routes should come AFTER specific routes
 hotelsRouter
   .route("/:id")
   .get(getHotelById)
   .put(updateHotel)
   .delete(deleteHotel);
-hotelsRouter.route("/embeddings/create").post(createEmbeddings);
-hotelsRouter.route("/search/retrieve").get(retrieve);
 
 export default hotelsRouter;
