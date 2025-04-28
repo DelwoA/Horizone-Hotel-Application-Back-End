@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import { string } from "zod";
 
+/**
+ * Mongoose schema for Booking documents
+ * Defines the structure and validation rules for booking data in MongoDB
+ * Includes fields for hotel, user, dates, contact information, and payment status
+ */
 const BookingSchema = new mongoose.Schema({
   hotelId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -39,7 +44,27 @@ const BookingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  paymentStatus: {
+    type: String,
+    enum: ["PENDING", "PAID"],
+    default: "PENDING",
+    // This field tracks the payment status of the booking
+    // PENDING: Initial state, payment not yet completed
+    // PAID: Payment has been successfully processed through Stripe
+  },
+  paymentMethod: {
+    type: String,
+    enum: ["CARD", "BANK_TRANSFER"],
+    default: "CARD",
+    // Payment method used for this booking
+    // CARD: Paid using credit/debit card via Stripe
+    // BANK_TRANSFER: Alternative payment method (not implemented with Stripe)
+  },
 });
 
+/**
+ * Mongoose model for Booking collection
+ * Provides methods for interacting with booking documents in the database
+ */
 const Booking = mongoose.model("Booking", BookingSchema);
 export default Booking;

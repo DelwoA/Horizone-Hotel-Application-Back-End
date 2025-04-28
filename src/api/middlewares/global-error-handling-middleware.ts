@@ -1,5 +1,22 @@
 import { Request, Response, NextFunction } from "express";
 
+/**
+ * Global error handling middleware
+ * Catches all errors thrown during request processing and returns appropriate HTTP responses
+ *
+ * Handles specific error types with their corresponding HTTP status codes:
+ * - NotFoundError: 404 Not Found
+ * - ValidationError: 400 Bad Request
+ * - UnauthorizedError: 401 Unauthorized
+ * - ForbiddenError: 403 Forbidden
+ *
+ * Any unhandled errors result in a 500 Internal Server Error response
+ *
+ * @param error - The error object caught by Express
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 const globalErrorHandlingMiddleware = (
   error: Error,
   req: Request,

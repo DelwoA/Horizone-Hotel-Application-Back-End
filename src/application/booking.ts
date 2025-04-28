@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Booking from "../infrastructure/schemas/Booking";
 import { createBookingDTO } from "../domain/dtos/booking";
 import { clerkClient } from "@clerk/express";
+import Hotel from "../infrastructure/schemas/Hotel";
 
 export const createBooking = async (
   req: Request,
@@ -23,8 +24,13 @@ export const createBooking = async (
     // Get the user
     const userId = req.auth?.userId;
 
-    // Add the booking
-    await Booking.create({
+    // Generate a random room number between 100 and 999
+    const randomRoomNumber = Math.floor(Math.random() * 900) + 100;
+
+    console.log(`Assigning random room number: ${randomRoomNumber}`);
+
+    // Add the booking with the random room number
+    const newBooking = await Booking.create({
       hotelId: booking.data.hotelId,
       userId: userId,
       checkIn: booking.data.checkIn,
@@ -33,11 +39,17 @@ export const createBooking = async (
       lastName: booking.data.lastName,
       email: booking.data.email,
       phoneNumber: booking.data.phoneNumber,
-      roomNumber: booking.data.roomNumber,
+      roomNumber: randomRoomNumber, // Use random room number instead of user input
+      paymentStatus: "PENDING",
+      paymentMethod: "CARD",
     });
 
-    // Return the response
-    res.status(201).send();
+    // Return the response with booking ID for payment processing
+    res.status(201).json({
+      bookingId: newBooking._id,
+      roomNumber: randomRoomNumber,
+      message: "Booking created successfully, proceed to payment",
+    });
     return;
   } catch (error) {
     next(error);
