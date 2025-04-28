@@ -7,8 +7,19 @@ import { createHotelDTO, updateHotelDTO } from "../domain/dtos/hotel";
 
 import OpenAI from "openai";
 
+/**
+ * Utility function to pause execution for a specified time
+ * @param ms - The number of milliseconds to wait
+ * @returns A promise that resolves after the specified time
+ */
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/**
+ * Retrieves all hotels from the database
+ * @param req - Express request object
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const getAllHotels = async (
   req: Request,
   res: Response,
@@ -23,6 +34,17 @@ export const getAllHotels = async (
   }
 };
 
+/**
+ * Retrieves hotels with filtering and sorting options
+ * Supports location filtering and price sorting
+ *
+ * @param req - Express request object with query parameters:
+ *              - location: string or comma-separated locations to filter by
+ *              - sortBy: field to sort by (currently supports 'price')
+ *              - sortOrder: 'asc' or 'desc' for price sorting
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const getFilteredSortedHotels = async (
   req: Request,
   res: Response,
@@ -84,6 +106,13 @@ export const getFilteredSortedHotels = async (
   }
 };
 
+/**
+ * Retrieves a specific hotel by its ID
+ * @param req - Express request object with hotel ID in params
+ * @param res - Express response object
+ * @param next - Express next function
+ * @throws NotFoundError if hotel does not exist
+ */
 export const getHotelById = async (
   req: Request,
   res: Response,
@@ -102,7 +131,14 @@ export const getHotelById = async (
   }
 };
 
-// OpenAI API call
+/**
+ * Generates a response using OpenAI's GPT API
+ * Sends prompt from request body to OpenAI and returns the model's response
+ *
+ * @param req - Express request object with prompt in body
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const generateResponse = async (
   req: Request,
   res: Response,
@@ -117,6 +153,7 @@ export const generateResponse = async (
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
+      // System prompt is commented out but can be uncommented and modified as needed
       // {
       //   role: "system",
       //   content: `You are a assistant that will categorize the words that a user gives and give them labels and show an output.
@@ -137,6 +174,15 @@ export const generateResponse = async (
   return;
 };
 
+/**
+ * Creates a new hotel in the database
+ * Validates request data using Zod schema before creation
+ *
+ * @param req - Express request object with hotel data in body
+ * @param res - Express response object
+ * @param next - Express next function
+ * @throws ValidationError if request data is invalid
+ */
 export const createHotel = async (
   req: Request,
   res: Response,
@@ -173,6 +219,13 @@ export const createHotel = async (
   }
 };
 
+/**
+ * Deletes a hotel from the database by ID
+ *
+ * @param req - Express request object with hotel ID in params
+ * @param res - Express response object
+ * @param next - Express next function
+ */
 export const deleteHotel = async (
   req: Request,
   res: Response,
@@ -190,6 +243,17 @@ export const deleteHotel = async (
   }
 };
 
+/**
+ * Updates an existing hotel in the database
+ * Validates request data using Zod schema before update
+ *
+ * @param req - Express request object with:
+ *              - hotel ID in params (hotelId)
+ *              - updated hotel data in body
+ * @param res - Express response object
+ * @param next - Express next function
+ * @throws ValidationError if request data is invalid
+ */
 export const updateHotel = async (
   req: Request,
   res: Response,

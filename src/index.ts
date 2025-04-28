@@ -9,9 +9,15 @@ import cors from "cors";
 import globalErrorHandlingMiddleware from "./api/middlewares/global-error-handling-middleware";
 import { clerkMiddleware } from "@clerk/express";
 
+/**
+ * Main application entry point
+ * Sets up Express server with all necessary middleware and routes
+ */
+
 // Create an Express instance
 const app = express();
 
+// Add Clerk authentication middleware
 app.use(clerkMiddleware());
 
 // Special handling for Stripe webhook route (needs raw body)
@@ -23,7 +29,7 @@ app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 
 // Configure CORS to allow frontend domain
-// TODO: Double check if dynamic frontend url is working with localhost and production url.
+// This prevents cross-origin request issues between frontend and backend
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 app.use(
   cors({
@@ -33,13 +39,17 @@ app.use(
   })
 );
 
+// Connect to MongoDB database
 connectDB();
 
+// Request logger middleware
+// Logs HTTP method and path for each incoming request
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`);
   next();
 });
 
+// Register API routes
 app.use("/api/hotels", hotelsRouter);
 app.use("/api/bookings", bookingsRouter);
 app.use("/api/payment", paymentRouter);
@@ -63,6 +73,7 @@ app.get("/payment/success", (req, res) => {
   );
 });
 
+// Register global error handling middleware
 app.use(globalErrorHandlingMiddleware);
 
 // Define the port to run the server

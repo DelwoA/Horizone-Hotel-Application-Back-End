@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import { string } from "zod";
 
+/**
+ * Mongoose schema for Booking documents
+ * Defines the structure and validation rules for booking data in MongoDB
+ * Includes fields for hotel, user, dates, contact information, and payment status
+ */
 const BookingSchema = new mongoose.Schema({
   hotelId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -57,5 +62,9 @@ const BookingSchema = new mongoose.Schema({
   },
 });
 
+/**
+ * Mongoose model for Booking collection
+ * Provides methods for interacting with booking documents in the database
+ */
 const Booking = mongoose.model("Booking", BookingSchema);
 export default Booking;
