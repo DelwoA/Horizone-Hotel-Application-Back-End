@@ -30,14 +30,15 @@ app.use(express.json());
 
 // Configure CORS to allow frontend domain
 // This prevents cross-origin request issues between frontend and backend
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
-app.use(
-  cors({
-    origin: [FRONTEND_URL],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+// app.use(
+//   cors({
+//     origin: [FRONTEND_URL],
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//   })
+// );
+app.use(cors());
 
 // Connect to MongoDB database
 connectDB();
@@ -69,7 +70,7 @@ app.get("/payment/success", (req, res) => {
   // Include both session ID and booking ID in the redirect URL
   // This ensures the frontend has all the information needed to verify payment
   res.redirect(
-    `${FRONTEND_URL}/payment/success?session_id=${sessionId}&bookingId=${bookingId}`
+    `${process.env.FRONTEND_URL}/payment/success?session_id=${sessionId}&bookingId=${bookingId}`
   );
 });
 
