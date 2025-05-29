@@ -5,6 +5,9 @@ This document provides a comprehensive step-by-step guide to setting up the **ba
 
 👉 **Looking for the frontend project? Check out the corresponding GitHub repository here: [Horizone Hotel Application – Front-End](https://github.com/DelwoA/Horizone-Hotel-Application-Front-End)**
 <br><br>
+🌐 Horizone Hotels deployed application => https://horizonehotels-delwoathauda.netlify.app
+<br><br>
+
 
 ## 📁 Project Initialization
 
