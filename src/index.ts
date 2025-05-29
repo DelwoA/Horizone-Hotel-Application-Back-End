@@ -55,7 +55,7 @@ app.use("/api/hotels", hotelsRouter);
 app.use("/api/bookings", bookingsRouter);
 app.use("/api/payment", paymentRouter);
 
-// Add a redirect for payment success to frontend
+// Add a redirect for payment verification to frontend
 // This handles direct requests to the backend success URL (backup route)
 // Stripe redirects users to the success URL specified in checkout session
 app.get("/payment/success", (req, res) => {
@@ -67,10 +67,10 @@ app.get("/payment/success", (req, res) => {
     bookingId,
   });
 
-  // Include both session ID and booking ID in the redirect URL
-  // This ensures the frontend has all the information needed to verify payment
+  // Redirect to the payment verification page instead of directly to success
+  // This ensures proper verification flow is followed
   res.redirect(
-    `${process.env.FRONTEND_URL}/payment/success?session_id=${sessionId}&bookingId=${bookingId}`
+    `${process.env.FRONTEND_URL}/verify-payment?session_id=${sessionId}&bookingId=${bookingId}`
   );
 });
 

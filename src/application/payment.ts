@@ -8,6 +8,7 @@ import Booking from "../infrastructure/schemas/Booking";
 import Hotel from "../infrastructure/schemas/Hotel";
 import mongoose from "mongoose";
 import { differenceInDays } from "date-fns";
+import { getFrontendUrl } from "../infrastructure/utils/frontend-url";
 
 /**
  * Create a Stripe checkout session for a hotel booking
@@ -24,8 +25,8 @@ export const createStripeCheckout = async (
 ) => {
   try {
     const { bookingId } = req.params;
-    // Get frontend URL from environment variable or use a default
-    const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+    // Dynamically determine frontend URL based on request
+    const FRONTEND_URL = getFrontendUrl(req);
 
     if (!bookingId || !mongoose.Types.ObjectId.isValid(bookingId)) {
       res.status(400).json({ message: "Invalid booking ID" });
@@ -68,7 +69,7 @@ export const createStripeCheckout = async (
     // Success and cancel URLs - point to frontend application, not backend
     // The success URL includes the session ID as a query parameter which will be used
     // to verify payment status after redirect from Stripe
-    const successUrl = `${FRONTEND_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}&bookingId=${booking._id.toString()}`;
+    const successUrl = `${FRONTEND_URL}/verify-payment?session_id={CHECKOUT_SESSION_ID}&bookingId=${booking._id.toString()}`;
     const cancelUrl = `${FRONTEND_URL}/hotels/${
       hotel._id
     }?paymentCancelled=true&bookingId=${booking._id.toString()}`;
@@ -281,8 +282,8 @@ export const checkStripeSessionStatus = async (
         });
       }
 
-      // Get the updated booking with payment status
-      const booking = await Booking.findById(bookingId);
+      // Get the updated booking with payment status and hotel information
+      const booking = await Booking.findById(bookingId).populate("hotelId");
 
       if (!booking) {
         res.status(404).json({
@@ -304,7 +305,9 @@ export const checkStripeSessionStatus = async (
           checkOut: booking.checkOut,
           firstName: booking.firstName,
           lastName: booking.lastName,
+          roomNumber: booking.roomNumber,
           paymentStatus: booking.paymentStatus,
+          hotelName: (booking.hotelId as any)?.name || "Hotel Booking",
         },
         stripeSessionStatus: sessionDetails.status,
         stripePaymentStatus: sessionDetails.paymentStatus,
